@@ -41,6 +41,7 @@ def cm_api(request,cmd):
     resp_data = 'command execute: ' + cmd_exec + '\n'
     for line in cmd_result_lines:
         tmp = line.decode()
+        logger.debug(tmp.strip())
         resp_data += tmp
 
     response.content = resp_data
