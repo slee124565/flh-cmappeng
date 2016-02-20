@@ -26,15 +26,22 @@ def cm_api(request,cmd):
     arg = request.GET.get('arg')
     logger.info('http request coolmaster execute command %s with arg %s' % (cmd,arg))
     
-    cmd_exec = cmd + ' ' + arg + '\r\n'
+    if arg is None:
+        cmd_exec = cmd + '\r\n'
+    else:
+        cmd_exec = cmd + ' ' + arg + '\r\n'
+
     instr = get_coolmaster_instrument()
-    instr.open()
-    instr.write(cmd_exec)
-    cmd_result = instr.readlines()
+    instr.write(cmd_exec.encode())
+    cmd_result_lines = instr.readlines()
     instr.close()
     
     response = HttpResponse(content_type='text/plain')
     
-    response.content = 'command execute: ' + cmd_exec + '\n' + cmd_result
+    resp_data = 'command execute: ' + cmd_exec + '\n'
+    for line in cmd_result_lines:
+        tmp = line.decode()
+        resp_data += tmp
 
+    response.content = resp_data
     return response
