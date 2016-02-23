@@ -1,6 +1,6 @@
 #from django.shortcuts import render
 from django.http import HttpResponse
-import serial, logging, json
+import serial, logging, json, time
 
 from coolmaster.models import get_coolmaster_instrument
 
@@ -31,18 +31,26 @@ def cm_api(request,cmd):
     else:
         cmd_exec = cmd + ' ' + arg + '\r\n'
 
-    instr = get_coolmaster_instrument()
-    instr.write(cmd_exec.encode())
-    cmd_result_lines = instr.readlines()
+    try:
+        instr = get_coolmaster_instrument()
+        nbyte = instr.write(cmd_exec.encode())
+        logger.debug('write command [%s] and %d bytes sent.' % (cmd_exec,nbyte))
+        time.sleep(0.5)
+        rtn_data = b''
+        while instr.inWaiting():
+            rtn_data += instr.read(1024)
+        #cmd_result_lines = instr.readlines()
+        logger.debug('get response data : %s' % rtn_data.decode())
+
+        resp_data = 'command execute: ' + cmd_exec + '\n' + rtn_data.decode()
+    except:
+        logger.error('Serial Port Exception!', exc_info=True)
+        resp_data = 'CMStation Internal ERROR'
+        
     instr.close()
     
     response = HttpResponse(content_type='text/plain')
     
-    resp_data = 'command execute: ' + cmd_exec + '\n'
-    for line in cmd_result_lines:
-        tmp = line.decode()
-        logger.debug(tmp.strip())
-        resp_data += tmp
 
     response.content = resp_data
     return response
