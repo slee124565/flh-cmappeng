@@ -19,12 +19,13 @@ DEFAULT_CONFIG_COOLMASTER = {
 def get_coolmaster_instrument():
     app_config = get_app_json_db_config(__name__, DEFAULT_CONFIG_COOLMASTER)
     if os.path.exists(app_config['port']):
-        instr = serial.Serial(port = app_config['port'],
+        instr = serial.Serial(
                               baudrate = app_config['baudrate'],
                               parity = app_config['parity'],
                               stopbits = app_config['stopbits'],
                               bytesize = app_config['bytesize'],
                               timeout = app_config['timeout'])
+        instr.port = app_config['port']
     else:
         logger.warning('serial port is not exist! take it simulation mode')
     return instr
