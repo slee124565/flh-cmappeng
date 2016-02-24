@@ -15,10 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from coolmaster.views import cm_api
+from coolmaster.views import cm_api, hc2_vd_update_simulation
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     url(r'^cmapi/(?P<cmd>\w+)/$', cm_api),
+    url(r'^hc2/update/$', hc2_vd_update_simulation),
 ]

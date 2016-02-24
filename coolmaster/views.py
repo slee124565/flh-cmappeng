@@ -34,7 +34,6 @@ def cm_api(request,cmd):
 
     try:
         instr = get_coolmaster_instrument()
-
         ncount = 1
         while ncount < 5:
             if instr.isOpen() == False:
@@ -72,7 +71,7 @@ def cm_api(request,cmd):
 
         if len(rtn_data) == 0:
             logger.error('no response data for command [%s]' % cmd_exec.replace('\r\n','\\r\\n'))
-            resp_data = b'ERROR: No Data from Serial Port'
+            resp_data = 'ERROR: No Data from Serial Port'
         else:
             if len(rtn_data) > 0 and rtn_data[0] == 0:
                 logger.warning('receive byte array exist 0x00 at the begining, remove head 0x00 byte')
@@ -89,11 +88,14 @@ def cm_api(request,cmd):
     except:
         logger.error('Serial Port Exception!', exc_info=True)
         resp_data = 'CMStation Internal ERROR'
-        
-    instr.close()
+            
+        instr.close()
     
     response = HttpResponse(content_type='text/plain')
     
 
     response.content = resp_data
     return response
+
+def hc2_vd_update_simulation(request):
+    logger.info('hc2_vd_update_simulation triggered')
