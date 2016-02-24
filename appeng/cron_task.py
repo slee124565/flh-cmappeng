@@ -23,7 +23,8 @@ from coolmaster.models import CMUnitStat
 from dbconfig.views import get_app_json_db_config
 
 DEFAULT_CONFIG_CRON = {
-                       'hc2_vd_update_url' : 'http://127.0.0.1/appeng/hc2/update/',
+                        'cms_stat_url': 'http://127.0.0.1/appeng/cmapi/stat/',
+                        'hc2_vd_update_url' : 'http://127.0.0.1/appeng/hc2/update/',
                        }
 
 CM_STAT_TEST_DATAS = [
@@ -44,13 +45,12 @@ OK
 >
 >""",                     
                       ]
-url = 'http://127.0.0.1/appeng/cmapi/stat/'
-#url = 'http://127.0.0.1:9000/cmapi/stat/'
 
 try:
     logger.debug('get coolmaster stat from url: %s' % url)
     
     app_config = get_app_json_db_config(__name__,DEFAULT_CONFIG_CRON)
+    url = app_config.get('cms_stat_url')
     hc2_vd_update_url = app_config.get('hc2_vd_update_url')
     #hc2_vd_update_url = 'http://127.0.0.1:9000/hc2/update/'
     logger.debug('hc2_vd_update_url: %s' % hc2_vd_update_url)
@@ -62,7 +62,7 @@ try:
             if len(line) > 30:
                 logger.debug('get unit stat data: %s' % line)
                 if CMUnitStat.is_unit_stat_changed(line):
-                    logger.info('controlled unit stat changed')
+                    logger.info('controlled unit %s stat changed' % line[:3])
                     with urllib.request.urlopen(hc2_vd_update_url) as hc2_resp:
                         logger.info('hc2 response: %s' % hc2_resp.read().decode())
                 else:
