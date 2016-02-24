@@ -4,6 +4,21 @@ from django.conf import settings
 import os, sys, django, logging
 import urllib.request
 
+logger = logging.getLogger(__name__)
+
+if sys.platform == 'win32':
+    sys_path_to_add = r'D:\lee_shiueh\FLH\workspace\django_apps\cmstation\appeng'
+else:
+    sys_path_to_add = '/usr/share/appeng'
+    #sys_path_to_add = '/home/pi/django/appeng'
+
+#sys_path_to_add = os.path.dirname(os.path.dirname(os.getcwd()))
+logger.debug('system path to add %s' % sys_path_to_add)
+sys.path.append(sys_path_to_add)
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'appeng.settings'
+django.setup()
+
 from coolmaster.models import CMUnitStat
 from dbconfig.views import get_app_json_db_config
 
@@ -29,25 +44,15 @@ OK
 >
 >""",                     
                       ]
-logger = logging.getLogger(__name__)
-
-if sys.platform == 'win32':
-    sys_path_to_add = r'D:\lee_shiueh\FLH\workspace\django_apps\cmstation\appeng'
-else:
-    sys_path_to_add = '/usr/share/appengine'
-#sys_path_to_add = os.path.dirname(os.path.dirname(os.getcwd()))
-sys.path.append(sys_path_to_add)
-
-os.environ['DJANGO_SETTINGS_MODULE'] = 'appeng.settings'
-django.setup()
-
 url = 'http://127.0.0.1/appeng/cmapi/stat/'
+#url = 'http://127.0.0.1:9000/cmapi/stat/'
 
 try:
     logger.debug('get coolmaster stat from url: %s' % url)
     
-    app_config = get_app_json_db_config(__name__,)
+    app_config = get_app_json_db_config(__name__,DEFAULT_CONFIG_CRON)
     hc2_vd_update_url = app_config.get('hc2_vd_update_url')
+    #hc2_vd_update_url = 'http://127.0.0.1:9000/hc2/update/'
     logger.debug('hc2_vd_update_url: %s' % hc2_vd_update_url)
     
     cm_data = urllib.request.urlopen(url).read().decode()
@@ -60,6 +65,8 @@ try:
                     logger.info('controlled unit stat changed')
                     with urllib.request.urlopen(hc2_vd_update_url) as hc2_resp:
                         logger.info('hc2 response: %s' % hc2_resp.read().decode())
+                else:
+                    logger.info('unit %s stat no change' % line[:3])
             else:
                 logger.debug('ignore line data: %s' % line)
                     

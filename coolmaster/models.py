@@ -2,7 +2,6 @@ from django.db import models
 import serial, os, logging
 
 from dbconfig.views import get_app_json_db_config
-from pygments.lexers.robotframework import SETTING
 
 logger = logging.getLogger(__name__)
 # Create your models here.
