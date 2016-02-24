@@ -66,6 +66,7 @@ try:
                     logger.info('controlled unit %s stat changed' % line[:3])
                     with urllib.request.urlopen(hc2_vd_update_url) as hc2_resp:
                         logger.info('hc2 response: %s' % hc2_resp.read().decode())
+                    break
                 else:
                     logger.info('unit %s stat no change' % line[:3])
             else:
