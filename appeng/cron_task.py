@@ -47,10 +47,11 @@ OK
                       ]
 
 try:
-    logger.debug('get coolmaster stat from url: %s' % url)
     
     app_config = get_app_json_db_config(__name__,DEFAULT_CONFIG_CRON)
     url = app_config.get('cms_stat_url')
+    logger.debug('get coolmaster stat from url: %s' % url)
+
     hc2_vd_update_url = app_config.get('hc2_vd_update_url')
     #hc2_vd_update_url = 'http://127.0.0.1:9000/hc2/update/'
     logger.debug('hc2_vd_update_url: %s' % hc2_vd_update_url)
