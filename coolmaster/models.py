@@ -72,7 +72,20 @@ class CMUnitStat(models.Model):
                     (unitStat.fanspeed != fanspeed) or \
                     (unitStat.opmode != opmode) or \
                     (unitStat.ecode != ecode):
+                logger.debug('unit %s previous stat: %s' % (uid,
+                                                str([uid,status,sett,roomt,fanspeed,opmode,ecode])))
+                unitStat.sett = sett
+                unitStat.roomt = roomt
+                unitStat.fanspeed = fanspeed
+                unitStat.opmode = opmode
+                unitStat.ecode = ecode
+                unitStat.save()
+                logger.info('unit %s new stat %s' % (unitStat.uid, str(unitStat)))
                 return True
             else:
                 return False
+    
+    def __str__(self):
+        return str([self.uid,self.status,self.sett,self.roomt,self.fanspeed,self.opmode,self.ecode])
+
     

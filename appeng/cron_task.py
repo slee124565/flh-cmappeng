@@ -58,20 +58,21 @@ try:
     
     cm_data = urllib.request.urlopen(url).read().decode()
     if '>' == cm_data[-1]:
+        has_changed = False
         lines = cm_data.split('\r\n')
         for line in lines:
             if len(line) > 30:
                 logger.debug('get unit stat data: %s' % line)
                 if CMUnitStat.is_unit_stat_changed(line):
                     logger.info('controlled unit %s stat changed' % line[:3])
-                    with urllib.request.urlopen(hc2_vd_update_url) as hc2_resp:
-                        logger.info('hc2 response: %s' % hc2_resp.read().decode())
-                    break
+                    has_changed = True
                 else:
                     logger.info('unit %s stat no change' % line[:3])
             else:
                 logger.debug('ignore line data: %s' % line)
-                    
+        if has_changed:
+            with urllib.request.urlopen(hc2_vd_update_url) as hc2_resp:
+                logger.info('hc2 response: %s' % hc2_resp.read().decode())
     else:
         logger.info('response cm_data broken,\n %s\n try next time' % cm_data)
 except:
