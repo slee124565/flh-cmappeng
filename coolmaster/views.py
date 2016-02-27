@@ -99,5 +99,5 @@ def cm_api(request,cmd):
 
 def hc2_vd_update_simulation(request):
     logger.info('hc2_vd_update_simulation triggered')
-    return HttpResponse('OK')
+    return HttpResponse('Simulation Response OK')
 
