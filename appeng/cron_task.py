@@ -3,6 +3,7 @@
 from django.conf import settings
 import os, sys, django, logging
 import urllib.request
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -71,8 +72,10 @@ try:
             else:
                 logger.debug('ignore line data: %s' % line)
         if has_changed:
-            with urllib.request.urlopen(hc2_vd_update_url) as hc2_resp:
-                logger.info('hc2 response: %s' % hc2_resp.read().decode())
+            with requests.put(hc2_vd_update_url,data={'stat':cm_data}) as hc2_resp:
+                logger.info('hc2 response: %s' % hc2_resp.content.decode())
+            #with urllib.request.urlopen(hc2_vd_update_url) as hc2_resp:
+            #    logger.info('hc2 response: %s' % hc2_resp.read().decode())
     else:
         logger.info('response cm_data broken,\n %s\n try next time' % cm_data)
 except:
