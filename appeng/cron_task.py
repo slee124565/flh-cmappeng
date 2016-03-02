@@ -72,10 +72,12 @@ try:
             else:
                 logger.debug('ignore line data: %s' % line)
         if has_changed:
-            with requests.put(hc2_vd_update_url,data={'stat':cm_data}) as hc2_resp:
+            if not '127.0.0.1' in hc2_vd_update_url:
+                hc2_resp = requests.put(hc2_vd_update_url,auth=('admin','flhadmin'),json={'value':cm_data})
                 logger.info('hc2 response: %s' % hc2_resp.content.decode())
-            #with urllib.request.urlopen(hc2_vd_update_url) as hc2_resp:
-            #    logger.info('hc2 response: %s' % hc2_resp.read().decode())
+            else:
+                with urllib.request.urlopen(hc2_vd_update_url) as hc2_resp:
+                    logger.info('hc2 response: %s' % hc2_resp.read().decode())
     else:
         logger.info('response cm_data broken,\n %s\n try next time' % cm_data)
 except:
