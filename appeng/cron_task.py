@@ -26,6 +26,8 @@ from dbconfig.views import get_app_json_db_config
 DEFAULT_CONFIG_CRON = {
                         'cms_stat_url': 'http://127.0.0.1/appeng/cmapi/stat/',
                         'hc2_vd_update_url' : 'http://127.0.0.1/appeng/hc2/update/',
+                        'hc2_account' : 'admin',
+                        'hc2_passwd' : 'admin',
                        }
 
 CM_STAT_TEST_DATAS = [
@@ -54,6 +56,8 @@ try:
     logger.debug('get coolmaster stat from url: %s' % url)
 
     hc2_vd_update_url = app_config.get('hc2_vd_update_url')
+    hc2_account = app_config.get('hc2_account')
+    hc2_passwd = app_config.get('hc2_passwd')
     #hc2_vd_update_url = 'http://127.0.0.1:9000/hc2/update/'
     logger.debug('hc2_vd_update_url: %s' % hc2_vd_update_url)
     
@@ -73,11 +77,11 @@ try:
                 logger.debug('ignore line data: %s' % line)
         if has_changed:
             if not '127.0.0.1' in hc2_vd_update_url:
-                hc2_resp = requests.put(hc2_vd_update_url,auth=('admin','flhadmin'),json={'value':cm_data})
+                hc2_resp = requests.put(hc2_vd_update_url,auth=(hc2_account,hc2_passwd),json={'value':cm_data})
                 logger.info('hc2 response: %s' % hc2_resp.content.decode())
             else:
                 with urllib.request.urlopen(hc2_vd_update_url) as hc2_resp:
-                    logger.info('hc2 response: %s' % hc2_resp.read().decode())
+                    logger.info('hc2 self simulation response: %s' % hc2_resp.read().decode())
     else:
         logger.info('response cm_data broken,\n %s\n try next time' % cm_data)
 except:
