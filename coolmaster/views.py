@@ -8,6 +8,9 @@ from coolmaster.models import get_coolmaster_instrument
 logger = logging.getLogger(__name__)
 # Create your views here.
 
+def bytecmd_api(request):
+    pass
+
 def cm_api(request,cmd):
     """
     Trigger CoolMaster to execute `cmd` command. Return CoolMaster 
