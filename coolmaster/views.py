@@ -15,8 +15,10 @@ def bytecmd_api(request):
     
     Handle HTTP Get request with hex string argument from network 
     and trigger CoolMaster to covert hex string to byte array and
-    write to RS232 serial port.
+    write to RS232 serial port. And convert response data to hex
+    string as HTTP Respose content.
     The HTTP GET URL example:: 
+    
         http://url_request_path/?arg=1a2c3d4b
     
     Parameters:
@@ -45,16 +47,11 @@ def bytecmd_api(request):
             time.sleep(1)
             
             rtn_data = b''
-            lines = instr.readlines()
-            logger.debug('readlines count %d' % len(lines))
+            rtn_byte = instr.read()
+            rtn_hex = binascii.b2a_hex(rtn_byte)
+            logger.debug('get response data hex : \n%s' % rtn_hex)
 
-            logger.debug('is data remain %d' % instr.inWaiting())
-
-            for line in lines:
-                rtn_data += line
-            logger.debug('get response data : \n%s' % rtn_data.decode())
-
-            if len(rtn_data) == 0:
+            if len(rtn_byte) == 0:
                 logger.warning('no data received from serial connection!')
                 instr.close()
                 time.sleep(0.5)
@@ -63,15 +60,11 @@ def bytecmd_api(request):
             else:
                 break
 
-        if len(rtn_data) == 0:
+        if len(rtn_byte) == 0:
             logger.error('no response data for byte command')
             resp_data = 'ERROR: No Data from Serial Port'
         else:
-            rtn_hex = ''
-            for i in range(len(rtn_data)):
-                rtn_hex += hex(rtn_data[i]) + ' '
-            logger.debug('rtn data hex: %s' % rtn_hex)
-            resp_data = 'byte command execute: ' + hexstring + '\n' + rtn_data.decode().strip()
+            resp_data = rtn_hex
     except:
         logger.error('Serial Port Exception!', exc_info=True)
         resp_data = 'CMStation Internal ERROR'
