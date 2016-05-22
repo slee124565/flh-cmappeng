@@ -169,10 +169,15 @@ LOGGING = {
     },
     'root': {
         'handlers': ['default'],
-        'level': 'DEBUG'
+        'level': 'INFO'
     },
     'loggers': {
         'coolmaster': {
+            'handlers': ['console','default'],
+            'level': 'INFO',
+            'propagate': False
+        },
+        'coolmaster.models': {
             'handlers': ['console','default'],
             'level': 'DEBUG',
             'propagate': False
