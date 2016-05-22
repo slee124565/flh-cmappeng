@@ -73,7 +73,8 @@ class CMUnitStat(models.Model):
                     (unitStat.opmode != opmode) or \
                     (unitStat.ecode != ecode):
                 logger.info('unit %s previous stat: %s' % (uid,
-                                                str([uid,status,sett,roomt,fanspeed,opmode,ecode])))
+                                                str(unitStat)))
+                unitStat.status = status
                 unitStat.sett = sett
                 unitStat.roomt = roomt
                 unitStat.fanspeed = fanspeed
