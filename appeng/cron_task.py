@@ -62,7 +62,8 @@ try:
     logger.debug('hc2_vd_update_url: %s' % hc2_vd_update_url)
     
     cm_data = urllib.request.urlopen(url).read().decode()
-    if '>' == cm_data[-1]:
+    #if '>' == cm_data[-1]:
+    if True:
         has_changed = False
         lines = cm_data.split('\r\n')
         for line in lines:

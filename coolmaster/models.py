@@ -56,7 +56,10 @@ class CMUnitStat(models.Model):
         roomt = (unit_stat_data[12:18]).strip()
         fanspeed = (unit_stat_data[19:23]).strip()
         opmode = (unit_stat_data[24:28]).strip()
-        ecode = (unit_stat_data[29:]).strip()    
+        ecode = (unit_stat_data[29:]).strip() 
+        if ecode != 'OK':
+            logger.warning('param unit_stat_data %s error, ignored.' % unit_stat_data)
+            return False   
         unitStat,created = CMUnitStat.objects.get_or_create(uid = uid)
         if created:
             unitStat.status = status
