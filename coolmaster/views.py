@@ -134,13 +134,13 @@ def cm_api(request,cmd):
                 rtn_hex = ''
                 for i in range(len(rtn_data)):
                     rtn_hex += hex(rtn_data[i]) + ' '
-                logger.debug('rtn data hex: %s' % rtn_hex)
+                logger.debug('rtn data hex:\n%s' % rtn_hex)
                 resp_data = rtn_data.decode().strip()
-                logger.debug('%s' % resp_data)
+                logger.debug('rtn data string:\n%s' % resp_data)
                 
                 #-> return last stat result
                 pos = resp_data.rfind('stat')
-                if pos > 0:
+                if pos >= 0:
                     resp_data = resp_data[pos:]
                     logger.debug('stat result return:\n%s' % resp_data)
                     

@@ -174,7 +174,7 @@ LOGGING = {
     'loggers': {
         'coolmaster': {
             'handlers': ['console','default'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': False
         },
         'coolmaster.models': {
