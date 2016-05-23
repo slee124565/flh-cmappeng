@@ -49,6 +49,9 @@ class CMUnitStat(models.Model):
             return False
         uid = (unit_stat_data[:3]).strip()
         status = (unit_stat_data[4:7]).strip()
+        if not status in ['ON','OFF']:
+            logger.warning('param unit_stat_data %s error, ignored.' % unit_stat_data)
+            return False
         sett = (unit_stat_data[8:11]).strip()
         roomt = (unit_stat_data[12:18]).strip()
         fanspeed = (unit_stat_data[19:23]).strip()
