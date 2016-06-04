@@ -5,6 +5,7 @@ import serial, logging, json, time
 import binascii
 
 from coolmaster.models import get_coolmaster_instrument
+from coolmaster import temp
 
 logger = logging.getLogger(__name__)
 # Create your views here.
@@ -165,3 +166,5 @@ def hc2_vd_update_simulation(request):
     logger.info('hc2_vd_update_simulation triggered')
     return HttpResponse('Simulation Response OK')
 
+def temp_feedback(request):
+	return HttpResponse(temp.temperature_reading(temp.resistance_reading()))
