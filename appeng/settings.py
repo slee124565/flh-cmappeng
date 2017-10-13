@@ -174,27 +174,27 @@ LOGGING = {
     'loggers': {
         'coolmaster': {
             'handlers': ['console','default'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False
         },
         'coolmaster.models': {
             'handlers': ['console','default'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False
         },
         'dbconfig': {
             'handlers': ['console','default'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False
         },
         'appeng': {
             'handlers': ['console','default'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False
         },
         'django.request': {
             'handlers': ['request_handler'],
-            'level': 'DEBUG',
+            'level': 'INFO',
             'propagate': False
         },
     }

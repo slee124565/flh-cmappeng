@@ -25,7 +25,7 @@ from dbconfig.views import get_app_json_db_config
 
 DEFAULT_CONFIG_CRON = {
                         'cms_stat_url': 'http://127.0.0.1/appeng/cmapi/stat/',
-                        'hc2_vd_update_url' : 'http://127.0.0.1/appeng/hc2/update/',
+                        'hc2_vd_update_url': 'http://192.168.2.100/api/globalVariables/CM_Sync',
                         'hc2_account' : 'admin',
                         'hc2_passwd' : 'admin',
                        }
@@ -61,6 +61,7 @@ try:
     #hc2_vd_update_url = 'http://127.0.0.1:9000/hc2/update/'
     logger.debug('hc2_vd_update_url: %s' % hc2_vd_update_url)
     
+    logger.debug('cms_stat_url: %s' % url)
     cm_data = urllib.request.urlopen(url).read().decode()
     #if '>' == cm_data[-1]:
     if True:
@@ -73,16 +74,23 @@ try:
                     logger.info('controlled unit %s stat changed' % line[:3])
                     has_changed = True
                 else:
-                    logger.info('unit %s stat no change' % line[:3])
+                    logger.debug('unit %s stat no change' % line[:3])
             else:
                 logger.debug('ignore line data: %s' % line)
         if has_changed:
+            logger.debug('hc2 auth with (%s,%s)' % (hc2_account,hc2_passwd))
+            logger.debug('cm_data: %s' % str(cm_data))
             if not '127.0.0.1' in hc2_vd_update_url:
                 hc2_resp = requests.put(hc2_vd_update_url,auth=(hc2_account,hc2_passwd),json={'value':cm_data})
-                logger.info('hc2 response: %s' % hc2_resp.content.decode())
+                if hc2_resp.status_code != 200:
+                    logger.warning('hc2 response: %s' % hc2_resp.content.decode())
+                else:
+                    logger.debug('hc2 CM_Sync variable updated')
             else:
                 with urllib.request.urlopen(hc2_vd_update_url) as hc2_resp:
-                    logger.info('hc2 self simulation response: %s' % hc2_resp.read().decode())
+                    logger.debug('hc2 self simulation response: %s' % hc2_resp.read().decode())
+        else:
+            logger.debug('stat not changed')
     else:
         logger.info('response cm_data broken,\n %s\n try next time' % cm_data)
 except:

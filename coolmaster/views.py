@@ -5,7 +5,6 @@ import serial, logging, json, time
 import binascii
 
 from coolmaster.models import get_coolmaster_instrument
-from coolmaster import temp
 
 logger = logging.getLogger(__name__)
 # Create your views here.
